@@ -1,0 +1,65 @@
+
+
+# The Need
+
+Messing around with CIS compliance.
+  Do not use the word "compliance" or "product" or you will get in a pissing match with product people.
+Written some code that just exposes current status in facts.
+  Admins are blowing a ton of time reporting on compliance -- anything helps.
+    AIX admin almost cried when she saw it work.
+    Had an SoW that was to enforce the organization's own custom baselines
+      luckily Paul was shadowing.
+      crafted some facts to show compliance -- they loved it
+Deciding how to structure the data the facts return is opinionated
+  One customer wanted summaries, per-section facts.
+  Another customer wanted individual items, per-item facts.
+
+Something is better than nothing.
+
+
+# What are these guidelines?
+
+CIS is "Center for Internet Security" and they publish "baselines" of things that should be done to secure systems.
+
+Security departments love to borrow them and tell Ops that they need to comply with them.
+
+EL6 Benchmarks were just updated to 2.0.1 on June 2 and are tested on CentOS 6.7.
+
+  https://benchmarks.cisecurity.org/downloads/latest/
+
+
+# Structure
+
+Guidelines are broken down into numbered sections, where a section contains individual guidelines that are related.  (e.g., "Filesystem" contains things like "no cramfs" and "tmp on its own partition.")
+
+Guidelines are marked as "Scored" and "Not Scored" -- basically, you get dinged on Scored ones, "decreasing the final benchmark score," but not for the Not Scored ones.
+
+Guidelines are additionally marked as being Level 1 or Level 2 (with some even being further broken up into Server and Workstation).  Level 1 are intended to "provide a clear security benefit," and "not inhibit the utility of the technology."  Level 2 go a step beyond that and are generally more pro-active, and are also allowed to "negatively inhibit the utility or performance of the technology."
+
+Guidelines each have a description and rationale.
+
+
+# How to
+
+Most of the guidelines have an "Audit" and "Remediation" element.  These are the exact commands to run, to make sure a system is okay.  These make it super easy to automate a check -- and would make it similarly easy to implement Puppet code to automatically remediate them.
+
+So, how to approach auditing a guideline falls into one of three categories.
+
+## Facts that work
+
+If there's an audit command, and it takes less than a second to run on a normally-loaded machine, it's implemented as a plain-old boring fact.  The facts use Facter::Core::Execution.exec to run the actual command that the guideline specifies, so that an auditor sees it right there, verbatim, like they expect to see it.
+
+## Facts that can't be written
+
+Some guidelines require knowledge or judgement that a computer doesn't have, for instance, "add nodev Option to Removable Media."   Determining what's removable and what's not, isn't always clear.  Some of these, I've skipped, but made a very clear comment in the facter code that it's omitted.  Others I've made a best effort to provide the information that would be needed, in order for a human to decide, for instance, by listing *all* mounts that lack the nodev option.
+
+## Facts that would take too long to run
+
+Some guidelines' audit commands are total monsters.  For instance, "set sticky bit on all world-writable directories," requires a recursive find through the entire filesystem.  For facts that you don't want to wait around for, I've implemented Puppet code that simply declares a cron resource that runs the command and spits output into facts.d.
+
+
+# Output
+
+The result is facts for each X.Y subsection.  If all of the guidelines contained in that section pass, the fact returns "pass".  If any are failing, the fact returns a list of the ones that are failing.
+
+In this way, an mcollective command, or PuppetDB query, or group in the console can easily show you what nodes are passing, and what nodes are not.

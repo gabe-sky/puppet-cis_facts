@@ -14,6 +14,10 @@ Don't dither.  When you mention this idea to someone, they invariably start brai
 
 Make it super easy to discover and report nodes' status.  Using facts means that a person can use an `mco` command with a cleverly-crafted `--with-fact` flag to quickly get a report of machines that are failing some certain test.  Or you could do a PuppetDB query.  Or look in the Enterprise Console.  Using facts makes these things easy.
 
+I've also included more raw notes on why and how and things in a separate document, inside this repository, from when I did a "Demo."
+
+  Demo_Notes.txt
+
 
 # Implementation
 
