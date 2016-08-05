@@ -42,3 +42,10 @@ Let's add some example mco queries that will let someone easily get basic info o
 ## PuppetDB Ad-Hoc Queries
 
 Let's add some example curls to get folks started.
+
+
+# Future discussion
+
+* How do you exclude a fact from causing failure of a section of the guidelines.  For instance, what if the customer doesn't care if /tmp is a separate partition?
+** Let the admin (or Puppet code from e.g. a profile class) drop a fact into facts.d such as "excludechecks=3.1,3.2,3.6" perhaps?
+** Some clever query to an external database?
