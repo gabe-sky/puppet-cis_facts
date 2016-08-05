@@ -4,6 +4,10 @@ This repository contains a prototype or proof-of-concept.  Its aim is to provide
 
   * Redhat-family Enterprise Linux 6
 
+You can download the CIS benchmarks from their site.
+
+  https://benchmarks.cisecurity.org/downloads/latest/
+
 # Philosophy
 
 Perfect is the enemy of a functional bunch of pokes at the problem.  Rather than aim for a "product," let's just throw this out and see what happens.
