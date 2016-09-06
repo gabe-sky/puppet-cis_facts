@@ -2,7 +2,7 @@
 
 This repository contains a prototype or proof-of-concept.  Its aim is to provide Facter facts that reflect a node's compliance with CIS benchmarks.  Currently this is only implemented for nodes running
 
-  * Redhat-family Enterprise Linux 6
+  * CIS 2.0.1 -- CentOS Linux 7
 
 You can download the CIS benchmarks from their site.
 
@@ -16,11 +16,7 @@ Make it easy for the less-technical folks to read.  All facts in this project us
 
 Don't dither.  When you mention this idea to someone, they invariably start brainstorming.  Theoretical discussion is fun!  But this does not result in code or pull requests.
 
-Make it super easy to discover and report nodes' status.  Using facts means that a person can use an `mco` command with a cleverly-crafted `--with-fact` flag to quickly get a report of machines that are failing some certain test.  Or you could do a PuppetDB query.  Or look in the Enterprise Console.  Using facts makes these things easy.
-
-I've also included more raw notes on why and how and things in a separate document, inside this repository, from when I did a "Demo."
-
-  Demo_Notes.txt
+Make it super easy to discover and report nodes' status.  Using facts means that a person can use an `mco` command with a cleverly-crafted `--select` flag to quickly get a report of machines that are failing some certain test.  Or you could do a PuppetDB query.  Or look in the Enterprise Console.  Using facts makes these things easy.
 
 
 # Implementation
