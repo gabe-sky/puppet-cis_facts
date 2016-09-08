@@ -1,4 +1,4 @@
-$:.unshift '/opt/puppetlabs/puppet/cache/lib/facter/utils'
+$:.unshift '/opt/puppetlabs/puppet/cache/lib/facter/util'
 require 'CIS_1_CentOS7'
 
 Facter.add(:cis_1_centos7) do
