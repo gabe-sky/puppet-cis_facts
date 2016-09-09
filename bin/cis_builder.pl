@@ -22,7 +22,7 @@ MAIN:
 {
   &_init;
   &parse_pdf;
-  foreach my $section (keys %Tests)
+  foreach my $section (sort keys %Tests)
   {
     &create_framework($section);
   }
@@ -141,7 +141,7 @@ sub parse_pdf #()#
     }
 
     # Look for a heading
-    if ($line =~ /^([\d.]*\d+) (.+)$/)
+    if ($line =~ /^([1-9]\.[\d.]*\d+) (.+)$/)
     {
       @test_ids  = split /\./, $1;
       $test_name = $2;
@@ -155,7 +155,7 @@ sub parse_pdf #()#
       $audit         =  0;
       $variable      =  0;
       $skip_line     =  0;
-      print "- " . join('.', @test_ids) . ". $test_name\n"
+      print "- " . join('.', @test_ids) . " $test_name\n"
     }
     else
     {
@@ -327,10 +327,10 @@ sub traverse_tree #(*\%\@)#
   if (exists $tree->{&TITLE})
   {
     # Leaf Node
-    printf "- - %s. %s\n",
+    printf "- - %s %s\n",
            join('.', @parents),
            $tree->{&TITLE} if $Verbose;
-    printf $fh "  # %s. %s (%s)\n",
+    printf $fh "  # %s %s (%s)\n",
                join('.', @parents),
                $tree->{&TITLE},
                ($tree->{&SCORED} eq 'true') ? 'Scored' : 'Not Scored';
@@ -355,7 +355,7 @@ sub traverse_tree #(*\%\@)#
     print  $fh "               },\n"
              . "    :result => :nodata,\n"
              . "    :exec   => {\n";
-    foreach my $variable (keys %{$tree->{&EXEC}})
+    foreach my $variable (sort keys %{$tree->{&EXEC}})
     {
       my $cmd =  $tree->{&EXEC}{$variable};
          $cmd =~ s/"/\\"/g;
@@ -370,7 +370,7 @@ sub traverse_tree #(*\%\@)#
                join("']['", @parents);
     print  $fh "                 if (\n"
              . "# TODO Put failure case here. Expecting:\n";
-    foreach my $variable (keys %{$tree->{&EXPECT}})
+    foreach my $variable (sort keys %{$tree->{&EXPECT}})
     {
       printf $fh "# %s => %s\n",
                  $variable,
