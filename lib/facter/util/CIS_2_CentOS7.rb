@@ -42,10 +42,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# chkconfig => chargen-stream: off
-                    ) then
+                 if ( this[:data]['chkconfig'] =~ /chargen-dgram.+:on.+/ ||
+                      this[:data]['chkconfig'] =~ /chargen-stream.+:on.+/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -68,10 +66,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# chkconfig => daytime-stream: off
-                    ) then
+                 if ( this[:data]['chkconfig'] =~ /daytime-dgram.+:on.+/ ||
+                      this[:data]['chkconfig'] =~ /daytime-stream.+:on.+/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -94,10 +90,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# chkconfig => discard-stream: off
-                    ) then
+                 if ( this[:data]['chkconfig'] =~ /discard-dgram.+:on.+/ ||
+                      this[:data]['chkconfig'] =~ /discard-stream.+:on.+/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -120,10 +114,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-# chkconfig => off
-                    ) then
+                 if ( this[:data]['chkconfig'] =~ /echo-dgram.+:on.+/ ||
+                      this[:data]['chkconfig'] =~ /echo-stream.+:on.+/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -146,10 +138,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['5']
-                 if (
-# TODO Put failure case here. Expecting:
-# chkconfig => off
-                    ) then
+                 if ( this[:data]['chkconfig'] =~ /time-dgram.+:on.+/ ||
+                      this[:data]['chkconfig'] =~ /time-stream.+:on.+/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -172,10 +162,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['6']
-                 if (
-# TODO Put failure case here. Expecting:
-# chkconfig => off
-                    ) then
+                 if ( this[:data]['chkconfig'] =~ /tftp.+:on.+/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -198,10 +185,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['1']['7']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -225,15 +210,14 @@ class CIS_2_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'rpm' => "rpm -q chrony",
+                 'rpm_ntp'    => "rpm -q ntp",
+                 'rpm_chrony' => "rpm -q chrony",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['1']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => virtualization software documentation and verify that host based synchronization is in use.
-                    ) then
+                 if ( this[:data]['rpm_ntp'] == 'package ntp is not installed' &&
+                      this[:data]['rpm_chrony'] == 'package chrony is not installed' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -251,18 +235,54 @@ class CIS_2_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep \"^ExecStart\" /usr/lib/systemd/system/ntpd.service",
+                 'grep1' => "grep \"^ExecStart\" /usr/lib/systemd/system/ntpd.service",
+                 'grep2' => "grep \"^server\" /etc/ntp.conf",
+                 'grep3' => "grep \"^OPTIONS\" /etc/sysconfig/ntp",
+                 'grep4' => "grep \"^ExecStart\" /usr/lib/systemd/system/ntpd.service",
                },
     :data   => Hash.new,
     :test   => Proc.new {
-                 this = @@results['2']['2']['1']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# grep => Additional options may be present.
-                    ) then
-                   this[:result] = :fail
+                 this   = @@results['2']['2']['1']['2']
+                 parent = @@results['2']['2']['1']['1']
+                 if ( parent[:data]['rpm_ntp'] == 'package ntp is not installed') then
+                   this[:result] = :skip
                  else
-                   this[:result] = :pass
+                   test1 = true
+                   lines = this[:data]['grep1'].split("\n")
+                   if (lines[0] =~ /^restrict\s+(-4\s+)?default\s+(?<options>.+)$/) then
+                     option_list = options.split(/\s+/)
+                     test1 = false unless option_list.include? kod
+                     test1 = false unless option_list.include? nomodify
+                     test1 = false unless option_list.include? notrap
+                     test1 = false unless option_list.include? nopeer
+                     test1 = false unless option_list.include? noquery
+                   else
+                     test1 = false
+                   end
+                   if (test1) then
+                     valid6 = false
+                     lines.each do
+                       |line|
+                       if (line =~ /^restrict\s+-6\s+default\s+(?<options>.+)$/) then
+                         option_list = options.split(/\s+/)
+                         valid6 = true
+                         valid6 = false unless option_list.include? kod
+                         valid6 = false unless option_list.include? nomodify
+                         valid6 = false unless option_list.include? notrap
+                         valid6 = false unless option_list.include? nopeer
+                         valid6 = false unless option_list.include? noquery
+                       end
+                     end
+                   end
+                   test1 = false unless valid6
+                   test2 = (this[:data]['grep2'] =~ /server\s+\S+/) ? true : false
+                   test3 = (this[:data]['grep3'] == 'OPTIONS="-u ntp:ntp"') ? true : false
+                   test4 = (this[:data]['grep4'] == 'ExecStart=/usr/sbin/ntpd -u ntp:ntp $OPTIONS') ? true : false
+                   if ( test1 && test2 && (test3 || test4)) then
+                     this[:result] = :pass
+                   else
+                     this[:result] = :fail
+                   end
                  end
                },
   }
