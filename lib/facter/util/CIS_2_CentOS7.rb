@@ -244,12 +244,12 @@ class CIS_2_CentOS7
     :test   => Proc.new {
                  this   = @@results['2']['2']['1']['2']
                  parent = @@results['2']['2']['1']['1']
-                 if ( parent[:data]['rpm_ntp'] == 'package ntp is not installed') then
+                 if ( parent[:data]['rpm_ntp'] == 'package ntp is not installed' ) then
                    this[:result] = :skip
                  else
                    test1 = true
                    lines = this[:data]['grep1'].split("\n")
-                   if (lines[0] =~ /^restrict\s+(-4\s+)?default\s+(?<options>.+)$/) then
+                   if ( lines[0] =~ /^restrict\s+(-4\s+)?default\s+(?<options>.+)$/ ) then
                      option_list = options.split(/\s+/)
                      test1 = false unless option_list.include? kod
                      test1 = false unless option_list.include? nomodify
@@ -259,11 +259,11 @@ class CIS_2_CentOS7
                    else
                      test1 = false
                    end
-                   if (test1) then
+                   if ( test1 ) then
                      valid6 = false
                      lines.each do
                        |line|
-                       if (line =~ /^restrict\s+-6\s+default\s+(?<options>.+)$/) then
+                       if ( line =~ /^restrict\s+-6\s+default\s+(?<options>.+)$/ ) then
                          option_list = options.split(/\s+/)
                          valid6 = true
                          valid6 = false unless option_list.include? kod
@@ -278,7 +278,7 @@ class CIS_2_CentOS7
                    test2 = (this[:data]['grep2'] =~ /server\s+\S+/) ? true : false
                    test3 = (this[:data]['grep3'] == 'OPTIONS="-u ntp:ntp"') ? true : false
                    test4 = (this[:data]['grep4'] == 'ExecStart=/usr/sbin/ntpd -u ntp:ntp $OPTIONS') ? true : false
-                   if ( test1 && test2 && (test3 || test4)) then
+                   if ( test1 && test2 && (test3 || test4 )) then
                      this[:result] = :pass
                    else
                      this[:result] = :fail
@@ -297,18 +297,22 @@ class CIS_2_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep ^OPTIONS /etc/sysconfig/chronyd",
+                 'grep1' => 'grep "^server" /etc/chrony.conf',
+                 'grep2' => 'grep ^OPTIONS /etc/sysconfig/chronyd',
                },
     :data   => Hash.new,
     :test   => Proc.new {
-                 this = @@results['2']['2']['1']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# grep => Additional options may be present.
-                    ) then
-                   this[:result] = :fail
+                 this   = @@results['2']['2']['1']['3']
+                 parent = @@results['2']['2']['1']['1']
+                 if ( parent[:data]['rpm_chrony'] == 'package chrony is not installed' ) then
+                   this[:result] = :skip
                  else
-                   this[:result] = :pass
+                   if ( this[:data]['grep1'] !~ /server\s+\S+/ ||
+                        this[:data]['grep2'] !~ /OPTIONS="-u chrony"/ ) then
+                     this[:result] = :fail
+                   else
+                     this[:result] = :pass
+                   end
                  end
                },
   }
@@ -328,9 +332,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-                    ) then
+                 if ( this[:data]['rpm'] !~ /package.+xorg-x11.+not installed/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -353,10 +355,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -379,10 +379,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -405,10 +403,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['5']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -431,10 +427,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['6']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -452,18 +446,19 @@ class CIS_2_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'systemctl' => "systemctl is-enabled rpcbind",
+                 'systemctl1' => "systemctl is-enabled nfs",
+                 'systemctl2' => "systemctl is-enabled rpcbind",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['7']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
-                   this[:result] = :fail
-                 else
+                 if ( ( this[:data]['systemctl1'] == 'disabled' ||
+                        this[:data]['systemctl1'] == ''          ) &&
+                      ( this[:data]['systemctl2'] == 'disabled' ||
+                        this[:data]['systemctl2'] == ''          ) ) then
                    this[:result] = :pass
+                 else
+                   this[:result] = :fail
                  end
                },
   }
@@ -483,10 +478,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['8']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -509,10 +502,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['9']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -535,10 +526,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['10']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -561,10 +550,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['11']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -587,10 +574,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['12']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -613,10 +598,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['13']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -639,10 +622,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['14']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -665,10 +646,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['15']
-                 if (
-# TODO Put failure case here. Expecting:
-# netstat => tcp 0 0 127.0.0.1:25 0.0.0.0:* LISTEN
-                    ) then
+                 if ( this[:data]['netstat'] != 'tcp 0 0 127.0.0.1:25 0.0.0.0:* LISTEN' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -691,10 +669,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['16']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -717,10 +693,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['17']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -743,10 +717,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['18']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -769,10 +741,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['19']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -795,10 +765,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['20']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -821,10 +789,8 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['2']['21']
-                 if (
-# TODO Put failure case here. Expecting:
-# systemctl => disabled
-                    ) then
+                 if ( this[:data]['systemctl'] != 'disabled' &&
+                      this[:data]['systemctl'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -850,10 +816,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['3']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => package ypbind is not installed
-                    ) then
+                 if ( this[:data]['rpm'] != 'package ypbind is not installed' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -876,10 +839,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['3']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => package rsh is not installed
-                    ) then
+                 if ( this[:data]['rpm'] != 'package rsh is not installed' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -902,10 +862,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['3']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => package talk is not installed
-                    ) then
+                 if ( this[:data]['rpm'] != 'package talk is not installed' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -928,10 +885,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['3']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => package telnet is not installed
-                    ) then
+                 if ( this[:data]['rpm'] != 'package telnet is not installed' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -954,10 +908,7 @@ class CIS_2_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['2']['3']['5']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => package openldap-clients is not installed
-                    ) then
+                 if ( this[:data]['rpm'] != 'package openldap-clients is not installed' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass

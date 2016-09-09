@@ -320,7 +320,7 @@ sub traverse_tree #(*\%\@)#
     printf $fh "  # %s %s (%s)\n",
                join('.', @parents),
                $tree->{&TITLE},
-               ($tree->{&SCORED} == 'true') ? 'Scored' : 'Not Scored';
+               ($tree->{&SCORED} eq 'true') ? 'Scored' : 'Not Scored';
     printf $fh "  \@\@results['%s'] = {\n",
                join("']['", @parents);
     my $title =  $tree->{&TITLE};
