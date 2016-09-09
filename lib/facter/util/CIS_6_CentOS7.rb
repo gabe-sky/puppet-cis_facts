@@ -27,7 +27,7 @@ class CIS_6_CentOS7
   # 6.1
   @@results['6']['1'] = Hash.new
 
-  # 6.1.1 Audit system file permissions
+  # 6.1.1. Audit system file permissions (Not Scored)
   @@results['6']['1']['1'] = {
     :title  => "Audit system file permissions",
     :scored => false,
@@ -52,7 +52,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.2 Ensure permissions on /etc/passwd are configured
+  # 6.1.2. Ensure permissions on /etc/passwd are configured (Scored)
   @@results['6']['1']['2'] = {
     :title  => "Ensure permissions on /etc/passwd are configured",
     :scored => true,
@@ -78,7 +78,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.3 Ensure permissions on /etc/shadow are configured
+  # 6.1.3. Ensure permissions on /etc/shadow are configured (Scored)
   @@results['6']['1']['3'] = {
     :title  => "Ensure permissions on /etc/shadow are configured",
     :scored => true,
@@ -104,7 +104,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.4 Ensure permissions on /etc/group are configured
+  # 6.1.4. Ensure permissions on /etc/group are configured (Scored)
   @@results['6']['1']['4'] = {
     :title  => "Ensure permissions on /etc/group are configured",
     :scored => true,
@@ -130,7 +130,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.5 Ensure permissions on /etc/gshadow are configured
+  # 6.1.5. Ensure permissions on /etc/gshadow are configured (Scored)
   @@results['6']['1']['5'] = {
     :title  => "Ensure permissions on /etc/gshadow are configured",
     :scored => true,
@@ -156,7 +156,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.6 Ensure permissions on /etc/passwd- are configured
+  # 6.1.6. Ensure permissions on /etc/passwd- are configured (Scored)
   @@results['6']['1']['6'] = {
     :title  => "Ensure permissions on /etc/passwd- are configured",
     :scored => true,
@@ -182,7 +182,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.7 Ensure permissions on /etc/shadow- are configured
+  # 6.1.7. Ensure permissions on /etc/shadow- are configured (Scored)
   @@results['6']['1']['7'] = {
     :title  => "Ensure permissions on /etc/shadow- are configured",
     :scored => true,
@@ -208,7 +208,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.8 Ensure permissions on /etc/group- are configured
+  # 6.1.8. Ensure permissions on /etc/group- are configured (Scored)
   @@results['6']['1']['8'] = {
     :title  => "Ensure permissions on /etc/group- are configured",
     :scored => true,
@@ -234,7 +234,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.9 Ensure permissions on /etc/gshadow- are configured
+  # 6.1.9. Ensure permissions on /etc/gshadow- are configured (Scored)
   @@results['6']['1']['9'] = {
     :title  => "Ensure permissions on /etc/gshadow- are configured",
     :scored => true,
@@ -260,7 +260,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.10 Ensure no world writable files exist
+  # 6.1.10. Ensure no world writable files exist (Scored)
   @@results['6']['1']['10'] = {
     :title  => "Ensure no world writable files exist",
     :scored => true,
@@ -287,7 +287,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.11 Ensure no unowned files or directories exist
+  # 6.1.11. Ensure no unowned files or directories exist (Scored)
   @@results['6']['1']['11'] = {
     :title  => "Ensure no unowned files or directories exist",
     :scored => true,
@@ -314,7 +314,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.12 Ensure no ungrouped files or directories exist
+  # 6.1.12. Ensure no ungrouped files or directories exist (Scored)
   @@results['6']['1']['12'] = {
     :title  => "Ensure no ungrouped files or directories exist",
     :scored => true,
@@ -341,7 +341,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.13 Audit SUID executables
+  # 6.1.13. Audit SUID executables (Not Scored)
   @@results['6']['1']['13'] = {
     :title  => "Audit SUID executables",
     :scored => false,
@@ -368,7 +368,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.1.14 Audit SGID executables
+  # 6.1.14. Audit SGID executables (Not Scored)
   @@results['6']['1']['14'] = {
     :title  => "Audit SGID executables",
     :scored => false,
@@ -398,7 +398,7 @@ class CIS_6_CentOS7
   # 6.2
   @@results['6']['2'] = Hash.new
 
-  # 6.2.1 Ensure password fields are not empty
+  # 6.2.1. Ensure password fields are not empty (Scored)
   @@results['6']['2']['1'] = {
     :title  => "Ensure password fields are not empty",
     :scored => true,
@@ -423,7 +423,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.2 Ensure no legacy "+" entries exist in /etc/passwd
+  # 6.2.2. Ensure no legacy "+" entries exist in /etc/passwd (Scored)
   @@results['6']['2']['2'] = {
     :title  => "Ensure no legacy \"+\" entries exist in /etc/passwd",
     :scored => true,
@@ -448,7 +448,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.3 Ensure no legacy "+" entries exist in /etc/shadow
+  # 6.2.3. Ensure no legacy "+" entries exist in /etc/shadow (Scored)
   @@results['6']['2']['3'] = {
     :title  => "Ensure no legacy \"+\" entries exist in /etc/shadow",
     :scored => true,
@@ -473,7 +473,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.4 Ensure no legacy "+" entries exist in /etc/group
+  # 6.2.4. Ensure no legacy "+" entries exist in /etc/group (Scored)
   @@results['6']['2']['4'] = {
     :title  => "Ensure no legacy \"+\" entries exist in /etc/group",
     :scored => true,
@@ -498,7 +498,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.5 Ensure root is the only UID 0 account
+  # 6.2.5. Ensure root is the only UID 0 account (Scored)
   @@results['6']['2']['5'] = {
     :title  => "Ensure root is the only UID 0 account",
     :scored => true,
@@ -524,7 +524,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.6 Ensure root PATH Integrity
+  # 6.2.6. Ensure root PATH Integrity (Scored)
   @@results['6']['2']['6'] = {
     :title  => "Ensure root PATH Integrity",
     :scored => true,
@@ -549,7 +549,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.7 Ensure all users' home directories exist
+  # 6.2.7. Ensure all users' home directories exist (Scored)
   @@results['6']['2']['7'] = {
     :title  => "Ensure all users' home directories exist",
     :scored => true,
@@ -574,7 +574,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.8 Ensure users' home directories permissions are 750 or more
+  # 6.2.8. Ensure users' home directories permissions are 750 or more (Not Scored)
   @@results['6']['2']['8'] = {
     :title  => "Ensure users' home directories permissions are 750 or more",
     :scored => false,
@@ -599,7 +599,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.9 Ensure users own their home directories
+  # 6.2.9. Ensure users own their home directories (Scored)
   @@results['6']['2']['9'] = {
     :title  => "Ensure users own their home directories",
     :scored => true,
@@ -624,7 +624,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.10 Ensure users' dot files are not group or world writable
+  # 6.2.10. Ensure users' dot files are not group or world writable (Scored)
   @@results['6']['2']['10'] = {
     :title  => "Ensure users' dot files are not group or world writable",
     :scored => true,
@@ -649,7 +649,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.11 Ensure no users have .forward files
+  # 6.2.11. Ensure no users have .forward files (Scored)
   @@results['6']['2']['11'] = {
     :title  => "Ensure no users have .forward files",
     :scored => true,
@@ -674,7 +674,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.12 Ensure no users have .netrc files
+  # 6.2.12. Ensure no users have .netrc files (Scored)
   @@results['6']['2']['12'] = {
     :title  => "Ensure no users have .netrc files",
     :scored => true,
@@ -699,7 +699,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.13 Ensure users' .netrc Files are not group or world accessible
+  # 6.2.13. Ensure users' .netrc Files are not group or world accessible (Not Scored)
   @@results['6']['2']['13'] = {
     :title  => "Ensure users' .netrc Files are not group or world accessible",
     :scored => false,
@@ -724,7 +724,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.14 Ensure no users have .rhosts files
+  # 6.2.14. Ensure no users have .rhosts files (Scored)
   @@results['6']['2']['14'] = {
     :title  => "Ensure no users have .rhosts files",
     :scored => true,
@@ -749,7 +749,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.15 Ensure all groups in /etc/passwd exist in /etc/group
+  # 6.2.15. Ensure all groups in /etc/passwd exist in /etc/group (Scored)
   @@results['6']['2']['15'] = {
     :title  => "Ensure all groups in /etc/passwd exist in /etc/group",
     :scored => true,
@@ -774,7 +774,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.16 Ensure no duplicate UIDs exist
+  # 6.2.16. Ensure no duplicate UIDs exist (Scored)
   @@results['6']['2']['16'] = {
     :title  => "Ensure no duplicate UIDs exist",
     :scored => true,
@@ -799,7 +799,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.17 Ensure no duplicate GIDs exist
+  # 6.2.17. Ensure no duplicate GIDs exist (Scored)
   @@results['6']['2']['17'] = {
     :title  => "Ensure no duplicate GIDs exist",
     :scored => true,
@@ -824,7 +824,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.18 Ensure no duplicate user names exist
+  # 6.2.18. Ensure no duplicate user names exist (Scored)
   @@results['6']['2']['18'] = {
     :title  => "Ensure no duplicate user names exist",
     :scored => true,
@@ -849,7 +849,7 @@ class CIS_6_CentOS7
                },
   }
 
-  # 6.2.19 Ensure no duplicate group names exist
+  # 6.2.19. Ensure no duplicate group names exist (Scored)
   @@results['6']['2']['19'] = {
     :title  => "Ensure no duplicate group names exist",
     :scored => true,

@@ -26,6 +26,7 @@ MAIN:
   {
     &create_framework($section);
   }
+  print "Complete!\n" if $Verbose;
 }
 #
 #===============================================================================
@@ -52,7 +53,11 @@ sub _init #()#
   &usage('Invalid input PDF filename') unless $pdf =~ /\.pdf$/i;
   &usage('Missing operating system')   unless $OpSys;
 
+  print "Starting conversion\n"     if $Verbose;
+  print "Converting $pdf to text\n" if $Verbose;
   $Text =  `pdftotext -eol unix $pdf -`;
+  print "- Conversion complete\n"   if $Verbose;
+  print "- Removing page numbers\n" if $Verbose;
   $Text =~ s/\d+ \| P a g e\s+//gm;
 
   return;
@@ -99,6 +104,7 @@ sub parse_pdf #()#
   my $skip_line    = 0;
   my $variable     = undef;
 
+  print "Parsing PDF\n" if $Verbose;
   LINE: foreach my $line (split /\n+/, $Text)
   {
 
@@ -149,6 +155,7 @@ sub parse_pdf #()#
       $audit         =  0;
       $variable      =  0;
       $skip_line     =  0;
+      print "- " . join('.', @test_ids) . ". $test_name\n"
     }
     else
     {
@@ -240,6 +247,7 @@ sub create_framework #($)#
   my $filename = &get_class_name($section) . '.rb';
   my $fh       = undef;
 
+  print "Creating $filename\n" if $Verbose;
   open $fh, ">$filename" or die "Cannot open '$filename' for write: $!";
   &write_header ( $fh, $section );
   &write_body   ( $fh, $section );
@@ -259,6 +267,7 @@ sub write_header #(*$)#
   my $section = $_[1];
   my $class   = &get_class_name($section);
 
+  print qq|- Writing class "header"\n| if $Verbose;
   print $fh "class $class\n";
   my $header = join "\n",
                '',
@@ -298,6 +307,7 @@ sub write_body #(*$)#
   my $fh      = $_[0];
   my $section = $_[1];
 
+  print "- Writing tests\n" if $Verbose;
   my @parents = ($section);
   &traverse_tree($fh, $Tests{$section}, \@parents);
 
@@ -317,7 +327,10 @@ sub traverse_tree #(*\%\@)#
   if (exists $tree->{&TITLE})
   {
     # Leaf Node
-    printf $fh "  # %s %s (%s)\n",
+    printf "- - %s. %s\n",
+           join('.', @parents),
+           $tree->{&TITLE} if $Verbose;
+    printf $fh "  # %s. %s (%s)\n",
                join('.', @parents),
                $tree->{&TITLE},
                ($tree->{&SCORED} eq 'true') ? 'Scored' : 'Not Scored';
@@ -329,10 +342,16 @@ sub traverse_tree #(*\%\@)#
     printf $fh "    :scored => %s,\n",
                $tree->{&SCORED};
     print  $fh "    :level  => {\n";
-    printf $fh "                 :server      => '%d',\n",
-               $tree->{&LEVEL}{':server'};
-    printf $fh "                 :workstation => '%d',\n",
-               $tree->{&LEVEL}{':workstation'};
+    if (exists  $tree->{&LEVEL}{':server'} and
+        defined $tree->{&LEVEL}{':server'} ) {
+      printf $fh "                 :server      => '%d',\n",
+                 $tree->{&LEVEL}{':server'};
+    }
+    if (exists  $tree->{&LEVEL}{':workstation'} and
+        defined $tree->{&LEVEL}{':workstation'} ) {
+      printf $fh "                 :workstation => '%d',\n",
+                 $tree->{&LEVEL}{':workstation'};
+    }
     print  $fh "               },\n"
              . "    :result => :nodata,\n"
              . "    :exec   => {\n";
@@ -390,6 +409,7 @@ sub write_footer #(*)#
 
   my $fh = $_[0];
 
+  print "- Write class methods\n" if $Verbose;
   my $footer = join "\n",
                '  def initialize',
                '    populate_all_data(@@results)',

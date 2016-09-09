@@ -27,7 +27,7 @@ class CIS_3_CentOS7
   # 3.1
   @@results['3']['1'] = Hash.new
 
-  # 3.1.1 Ensure IP forwarding is disabled
+  # 3.1.1. Ensure IP forwarding is disabled (Scored)
   @@results['3']['1']['1'] = {
     :title  => "Ensure IP forwarding is disabled",
     :scored => true,
@@ -42,10 +42,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['1']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.ip_forward = 0
-                    ) then
+                 if ( this[:data]['sysctl'] != 'net.ipv4.ip_forward = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -53,7 +50,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.1.2 Ensure packet redirect sending is disabled
+  # 3.1.2. Ensure packet redirect sending is disabled (Scored)
   @@results['3']['1']['2'] = {
     :title  => "Ensure packet redirect sending is disabled",
     :scored => true,
@@ -63,15 +60,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv4.conf.default.send_redirects",
+                 'sysctl1' => "sysctl net.ipv4.conf.all.send_redirects",
+                 'sysctl2' => "sysctl net.ipv4.conf.default.send_redirects",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['1']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.conf.default.send_redirects = 0
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv4.conf.all.send_redirects = 0' ||
+                      this[:data]['sysctl2'] != 'net.ipv4.conf.default.send_redirects = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -82,7 +78,7 @@ class CIS_3_CentOS7
   # 3.2
   @@results['3']['2'] = Hash.new
 
-  # 3.2.1 Ensure source routed packets are not accepted
+  # 3.2.1. Ensure source routed packets are not accepted (Scored)
   @@results['3']['2']['1'] = {
     :title  => "Ensure source routed packets are not accepted",
     :scored => true,
@@ -92,15 +88,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv4.conf.default.accept_source_route",
+                 'sysctl1' => "sysctl net.ipv4.conf.all.accept_source_route",
+                 'sysctl2' => "sysctl net.ipv4.conf.default.accept_source_route",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.conf.default.accept_source_route = 0
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv4.conf.all.accept_source_route = 0' ||
+                      this[:data]['sysctl2'] != 'net.ipv4.conf.default.accept_source_route = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -108,7 +103,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.2 Ensure ICMP redirects are not accepted
+  # 3.2.2. Ensure ICMP redirects are not accepted (Scored)
   @@results['3']['2']['2'] = {
     :title  => "Ensure ICMP redirects are not accepted",
     :scored => true,
@@ -118,15 +113,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv4.conf.default.accept_redirects",
+                 'sysctl1' => "sysctl net.ipv4.conf.all.accept_redirects",
+                 'sysctl2' => "sysctl net.ipv4.conf.default.accept_redirects",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.conf.default.accept_redirects = 0
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv4.conf.all.accept_redirects = 0' ||
+                      this[:data]['sysctl2'] != 'net.ipv4.conf.default.accept_redirects = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -134,7 +128,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.3 Ensure secure ICMP redirects are not accepted
+  # 3.2.3. Ensure secure ICMP redirects are not accepted (Scored)
   @@results['3']['2']['3'] = {
     :title  => "Ensure secure ICMP redirects are not accepted",
     :scored => true,
@@ -144,15 +138,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv4.conf.default.secure_redirects",
+                 'sysctl1' => "sysctl net.ipv4.conf.all.secure_redirects",
+                 'sysctl2' => "sysctl net.ipv4.conf.default.secure_redirects",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.conf.default.secure_redirects = 0
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv4.conf.all.secure_redirects = 0' ||
+                      this[:data]['sysctl2'] != 'net.ipv4.conf.default.secure_redirects = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -160,7 +153,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.4 Ensure suspicious packets are logged
+  # 3.2.4. Ensure suspicious packets are logged (Scored)
   @@results['3']['2']['4'] = {
     :title  => "Ensure suspicious packets are logged",
     :scored => true,
@@ -170,15 +163,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv4.conf.default.log_martians",
+                 'sysctl1' => "sysctl net.ipv4.conf.all.log_martians",
+                 'sysctl2' => "sysctl net.ipv4.conf.default.log_martians",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.conf.default.log_martians = 1
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv4.conf.all.log_martians = 1' ||
+                      this[:data]['sysctl2'] != 'net.ipv4.conf.default.log_martians = 1' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -186,7 +178,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.5 Ensure broadcast ICMP requests are ignored
+  # 3.2.5. Ensure broadcast ICMP requests are ignored (Scored)
   @@results['3']['2']['5'] = {
     :title  => "Ensure broadcast ICMP requests are ignored",
     :scored => true,
@@ -201,10 +193,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['5']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.icmp_echo_ignore_broadcasts = 1
-                    ) then
+                 if ( this[:data]['sysctl'] != 'net.ipv4.icmp_echo_ignore_broadcasts = 1' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -212,7 +201,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.6 Ensure bogus ICMP responses are ignored
+  # 3.2.6. Ensure bogus ICMP responses are ignored (Scored)
   @@results['3']['2']['6'] = {
     :title  => "Ensure bogus ICMP responses are ignored",
     :scored => true,
@@ -227,10 +216,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['6']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.icmp_ignore_bogus_error_responses = 1
-                    ) then
+                 if ( this[:data]['sysctl'] != 'net.ipv4.icmp_ignore_bogus_error_responses = 1' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -238,7 +224,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.7 Ensure Reverse Path Filtering is enabled
+  # 3.2.7. Ensure Reverse Path Filtering is enabled (Scored)
   @@results['3']['2']['7'] = {
     :title  => "Ensure Reverse Path Filtering is enabled",
     :scored => true,
@@ -248,15 +234,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv4.conf.default.rp_filter",
+                 'sysctl1' => "sysctl net.ipv4.conf.all.rp_filter",
+                 'sysctl2' => "sysctl net.ipv4.conf.default.rp_filter",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['7']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.conf.default.rp_filter = 1
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv4.conf.all.rp_filter = 1' ||
+                      this[:data]['sysctl2'] != 'net.ipv4.conf.default.rp_filter = 1' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -264,7 +249,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.2.8 Ensure TCP SYN Cookies is enabled
+  # 3.2.8. Ensure TCP SYN Cookies is enabled (Scored)
   @@results['3']['2']['8'] = {
     :title  => "Ensure TCP SYN Cookies is enabled",
     :scored => true,
@@ -279,10 +264,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['2']['8']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv4.tcp_syncookies = 1
-                    ) then
+                 if ( this[:data]['sysctl'] != 'net.ipv4.tcp_syncookies = 1' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -293,7 +275,7 @@ class CIS_3_CentOS7
   # 3.3
   @@results['3']['3'] = Hash.new
 
-  # 3.3.1 Ensure IPv6 router advertisements are not accepted
+  # 3.3.1. Ensure IPv6 router advertisements are not accepted (Scored)
   @@results['3']['3']['1'] = {
     :title  => "Ensure IPv6 router advertisements are not accepted",
     :scored => true,
@@ -303,15 +285,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv6.conf.default.accept_ra",
+                 'sysctl1' => "sysctl net.ipv6.conf.all.accept_ra",
+                 'sysctl2' => "sysctl net.ipv6.conf.default.accept_ra",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['3']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv6.conf.default.accept_ra = 0
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv6.conf.all.accept_ra = 0' ||
+                      this[:data]['sysctl2'] != 'net.ipv6.conf.default.accept_ra = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -319,7 +300,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.3.2 Ensure IPv6 redirects are not accepted
+  # 3.3.2. Ensure IPv6 redirects are not accepted (Scored)
   @@results['3']['3']['2'] = {
     :title  => "Ensure IPv6 redirects are not accepted",
     :scored => true,
@@ -329,15 +310,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'sysctl' => "sysctl net.ipv6.conf.default.accept_redirects",
+                 'sysctl1' => "sysctl net.ipv6.conf.all.accept_redirects",
+                 'sysctl2' => "sysctl net.ipv6.conf.default.accept_redirects",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['3']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# sysctl => net.ipv6.conf.default.accept_redirect = 0
-                    ) then
+                 if ( this[:data]['sysctl1'] != 'net.ipv6.conf.all.accept_redirect = 0' ||
+                      this[:data]['sysctl2'] != 'net.ipv6.conf.default.accept_redirect = 0' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -345,7 +325,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.3.3 Ensure IPv6 is disabled
+  # 3.3.3. Ensure IPv6 is disabled (Not Scored)
   @@results['3']['3']['3'] = {
     :title  => "Ensure IPv6 is disabled",
     :scored => false,
@@ -360,10 +340,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['3']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# modprobe => ...
-                    ) then
+                 if ( this[:data]['modprobe'] !~ /options ipv6 disable=1/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -374,7 +351,7 @@ class CIS_3_CentOS7
   # 3.4
   @@results['3']['4'] = Hash.new
 
-  # 3.4.1 Ensure TCP Wrappers is installed
+  # 3.4.1. Ensure TCP Wrappers is installed (Scored)
   @@results['3']['4']['1'] = {
     :title  => "Ensure TCP Wrappers is installed",
     :scored => true,
@@ -384,15 +361,14 @@ class CIS_3_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'rpm' => "rpm -q tcp_wrappers-libs",
+                 'rpm1' => "rpm -q tcp_wrappers",
+                 'rpm2' => "rpm -q tcp_wrappers-libs",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['4']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => tcp_wrappers-libs-<version>
-                    ) then
+                 if ( this[:data]['rpm1'] !~ /^tcp_wrappers-\S/ ||
+                      this[:data]['rpm2'] !~ /^tcp_wrappers-libs-\S/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -400,7 +376,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.4.2 Ensure /etc/hosts.allow is configured
+  # 3.4.2. Ensure /etc/hosts.allow is configured (Scored)
   @@results['3']['4']['2'] = {
     :title  => "Ensure /etc/hosts.allow is configured",
     :scored => true,
@@ -415,17 +391,11 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['4']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-                    ) then
-                   this[:result] = :fail
-                 else
-                   this[:result] = :pass
-                 end
+                 this[:result] = :skip
                },
   }
 
-  # 3.4.3 Ensure /etc/hosts.deny is configured
+  # 3.4.3. Ensure /etc/hosts.deny is configured (Scored)
   @@results['3']['4']['3'] = {
     :title  => "Ensure /etc/hosts.deny is configured",
     :scored => true,
@@ -440,10 +410,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['4']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# cat => ALL: ALL
-                    ) then
+                 if ( this[:data]['cat'] != 'ALL: ALL' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -451,7 +418,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.4.4 Ensure permissions on /etc/hosts.allow are configured
+  # 3.4.4. Ensure permissions on /etc/hosts.allow are configured (Scored)
   @@results['3']['4']['4'] = {
     :title  => "Ensure permissions on /etc/hosts.allow are configured",
     :scored => true,
@@ -466,9 +433,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['4']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-# stat => root)
+                 if ( this[:data]['stat'] !~ /Access:\s+\(0644\/-rw-r--r--\)\s+Uid:\s+\(\s+0\/\s+root\)\s+Gid:\s+\(\s+0\/\s+root\)/
                     ) then
                    this[:result] = :fail
                  else
@@ -477,7 +442,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.4.5 Ensure permissions on /etc/hosts.deny are 644
+  # 3.4.5. Ensure permissions on /etc/hosts.deny are 644 (Scored)
   @@results['3']['4']['5'] = {
     :title  => "Ensure permissions on /etc/hosts.deny are 644",
     :scored => true,
@@ -492,9 +457,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['4']['5']
-                 if (
-# TODO Put failure case here. Expecting:
-# stat => root)
+                 if ( this[:data]['stat'] !~ /Access:\s+\(0644\/-rw-r--r--\)\s+Uid:\s+\(\s+0\/\s+root\)\s+Gid:\s+\(\s+0\/\s+root\)/
                     ) then
                    this[:result] = :fail
                  else
@@ -506,7 +469,7 @@ class CIS_3_CentOS7
   # 3.5
   @@results['3']['5'] = Hash.new
 
-  # 3.5.1 Ensure DCCP is disabled
+  # 3.5.1. Ensure DCCP is disabled (Not Scored)
   @@results['3']['5']['1'] = {
     :title  => "Ensure DCCP is disabled",
     :scored => false,
@@ -517,16 +480,13 @@ class CIS_3_CentOS7
     :result => :nodata,
     :exec   => {
                  'modprobe' => "modprobe -n -v dccp",
-                 'lsmod' => "lsmod | grep dccp",
+                 'lsmod'    => "lsmod | grep dccp",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['5']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# modprobe => install /bin/true
-# lsmod => 
-                    ) then
+                 if ( this[:data]['modprobe'] != 'install /bin/true' ||
+                      this[:data]['lsmod'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -534,7 +494,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.5.2 Ensure SCTP is disabled
+  # 3.5.2. Ensure SCTP is disabled (Not Scored)
   @@results['3']['5']['2'] = {
     :title  => "Ensure SCTP is disabled",
     :scored => false,
@@ -550,11 +510,8 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['5']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# modprobe => install /bin/true
-# lsmod => 
-                    ) then
+                 if ( this[:data]['modprobe'] != 'install /bin/true' ||
+                      this[:data]['lsmod'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -562,7 +519,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.5.3 Ensure RDS is disabled
+  # 3.5.3. Ensure RDS is disabled (Not Scored)
   @@results['3']['5']['3'] = {
     :title  => "Ensure RDS is disabled",
     :scored => false,
@@ -578,11 +535,8 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['5']['3']
-                 if (
-# TODO Put failure case here. Expecting:
-# modprobe => install /bin/true
-# lsmod => 
-                    ) then
+                 if ( this[:data]['modprobe'] != 'install /bin/true' ||
+                      this[:data]['lsmod'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -590,7 +544,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.5.4 Ensure TIPC is disabled
+  # 3.5.4. Ensure TIPC is disabled (Not Scored)
   @@results['3']['5']['4'] = {
     :title  => "Ensure TIPC is disabled",
     :scored => false,
@@ -606,11 +560,8 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['5']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-# modprobe => install /bin/true
-# lsmod => 
-                    ) then
+                 if ( this[:data]['modprobe'] != 'install /bin/true' ||
+                      this[:data]['lsmod'] != '' ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -621,7 +572,7 @@ class CIS_3_CentOS7
   # 3.6
   @@results['3']['6'] = Hash.new
 
-  # 3.6.1 Ensure iptables is installed
+  # 3.6.1. Ensure iptables is installed (Scored)
   @@results['3']['6']['1'] = {
     :title  => "Ensure iptables is installed",
     :scored => true,
@@ -636,10 +587,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['6']['1']
-                 if (
-# TODO Put failure case here. Expecting:
-# rpm => iptables-<version>
-                    ) then
+                 if ( this[:data]['rpm'] !~ /^iptables-\S/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -647,7 +595,7 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.6.2 Ensure default deny firewall policy
+  # 3.6.2. Ensure default deny firewall policy (Scored)
   @@results['3']['6']['2'] = {
     :title  => "Ensure default deny firewall policy",
     :scored => true,
@@ -662,10 +610,9 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['6']['2']
-                 if (
-# TODO Put failure case here. Expecting:
-# iptables => Chain OUTPUT (policy DROP)
-                    ) then
+                 if ( this[:data]['iptables'] !~ /Chain INPUT \(policy DROP\)/   ||
+                      this[:data]['iptables'] !~ /Chain FORWARD \(policy DROP\)/ ||
+                      this[:data]['iptables'] !~ /Chain OUTPUT \(policy DROP\)/ ) then
                    this[:result] = :fail
                  else
                    this[:result] = :pass
@@ -673,7 +620,33 @@ class CIS_3_CentOS7
                },
   }
 
-  # 3.6.4 Ensure outbound and established connections are configured
+  # 3.6.3. Ensure loopback traffic is configured (Scored)
+  @@results['3']['6']['3'] = {
+    :title  => "Ensure loopback traffic is configured",
+    :scored => true,
+    :level  => {
+                 :server      => '1',
+                 :workstation => '1',
+               },
+    :result => :nodata,
+    :exec   => {
+                 'iptables1' => "iptables -L INPUT -v -n",
+                 'iptables2' => "iptables -L OUTPUT -v -n",
+               },
+    :data   => Hash.new,
+    :test   => Proc.new {
+                 this = @@results['3']['6']['3']
+                 if ( this[:data]['iptables1'] !~ /\s+\d+\s+\d+\s+ACCEPT\s+all\s+--\s+lo\s+\*\s+0\.0\.0\.0\/0\s+0\.0\.0\.0\/0/ ||
+                      this[:data]['iptables1'] !~ /\s+\d+\s+\d+\s+DROP\s+all\s+--\s+\*\s+\*\s+127\.0\.0\.0\/8\s+0\.0\.0\.0\/0/ ||
+                      this[:data]['iptables2'] !~ /\s+\d+\s+\d+\s+ACCEPT\s+all\s+--\s+lo\s+\*\s+0\.0\.0\.0\/0\s+0\.0\.0\.0\/0/ ) then
+                   this[:result] = :fail
+                 else
+                   this[:result] = :pass
+                 end
+               },
+  }
+
+  # 3.6.4. Ensure outbound and established connections are configured (Not Scored)
   @@results['3']['6']['4'] = {
     :title  => "Ensure outbound and established connections are configured",
     :scored => false,
@@ -688,17 +661,43 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['6']['4']
-                 if (
-# TODO Put failure case here. Expecting:
-                    ) then
-                   this[:result] = :fail
-                 else
-                   this[:result] = :pass
+                 this[:result] = :skip
+               },
+  }
+
+  # 3.6.5. Ensure firewall rules exist for all open ports (Scored)
+  @@results['3']['6']['5'] = {
+    :title  => "Ensure firewall rules exist for all open ports",
+    :scored => true,
+    :level  => {
+                 :server      => '1',
+                 :workstation => '1',
+               },
+    :result => :nodata,
+    :exec   => {
+                 'netstat'  => "netstat -ln",
+                 'iptables' => "iptables -L -v -n",
+               },
+    :data   => Hash.new,
+    :test   => Proc.new {
+                 this = @@results['3']['6']['5']
+                 ports = Array.new
+                 netstat_data = this[:data]['netstat'].to_s
+                 netstat_data.split("\n").each do
+                   |line|
+                   if ( line =~ /(?<proto>[a-z]+)\s+\d+\s+\d+\s+\d+\.\d+.\d+.\d+:(?<port>\d+)\s\.+LISTEN/ ) then
+                     ports.push "#{proto} dpt:#{port}"
+                   end
+                 end
+                 this[:result] = :pass
+                 ports.each do
+                   |search_string|
+                   this[:result] = :fail unless search_string =~ /#{Regex.escape search_string}/
                  end
                },
   }
 
-  # 3.7 Ensure wireless interfaces are disabled
+  # 3.7. Ensure wireless interfaces are disabled (Not Scored)
   @@results['3']['7'] = {
     :title  => "Ensure wireless interfaces are disabled",
     :scored => false,
@@ -714,14 +713,7 @@ class CIS_3_CentOS7
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['3']['7']
-                 if (
-# TODO Put failure case here. Expecting:
-# iwconfi => Run the following command and verify wireless interfaces are active:
-                    ) then
-                   this[:result] = :fail
-                 else
-                   this[:result] = :pass
-                 end
+                 this[:result] = :skip
                },
   }
 

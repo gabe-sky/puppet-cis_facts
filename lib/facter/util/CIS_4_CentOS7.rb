@@ -30,7 +30,7 @@ class CIS_4_CentOS7
   # 4.1.1
   @@results['4']['1']['1'] = Hash.new
 
-  # 4.1.1.1 Ensure audit log storage size is configured
+  # 4.1.1.1. Ensure audit log storage size is configured (Not Scored)
   @@results['4']['1']['1']['1'] = {
     :title  => "Ensure audit log storage size is configured",
     :scored => false,
@@ -56,7 +56,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.1.2 Ensure system is disabled when audit logs are full
+  # 4.1.1.2. Ensure system is disabled when audit logs are full (Scored)
   @@results['4']['1']['1']['2'] = {
     :title  => "Ensure system is disabled when audit logs are full",
     :scored => true,
@@ -66,14 +66,18 @@ class CIS_4_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep admin_space_left_action /etc/audit/auditd.conf",
+                 'grep3' => "grep admin_space_left_action /etc/audit/auditd.conf",
+                 'grep' => "grep space_left_action /etc/audit/auditd.conf",
+                 'grep2' => "grep action_mail_acct /etc/audit/auditd.conf",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['1']['2']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => admin_space_left_action = halt
+# grep3 => admin_space_left_action = halt
+# grep => space_left_action = email
+# grep2 => action_mail_acct = root
                     ) then
                    this[:result] = :fail
                  else
@@ -82,7 +86,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.1.3 Ensure audit logs are not automatically deleted
+  # 4.1.1.3. Ensure audit logs are not automatically deleted (Scored)
   @@results['4']['1']['1']['3'] = {
     :title  => "Ensure audit logs are not automatically deleted",
     :scored => true,
@@ -108,7 +112,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.2 Ensure auditd service is enabled
+  # 4.1.2. Ensure auditd service is enabled (Scored)
   @@results['4']['1']['2'] = {
     :title  => "Ensure auditd service is enabled",
     :scored => true,
@@ -134,7 +138,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.3 Ensure auditing for processes that start prior to auditd is enabled
+  # 4.1.3. Ensure auditing for processes that start prior to auditd is enabled (Not Scored)
   @@results['4']['1']['3'] = {
     :title  => "Ensure auditing for processes that start prior to auditd is enabled",
     :scored => false,
@@ -159,7 +163,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.4 Ensure events that modify date and time information are collected
+  # 4.1.4. Ensure events that modify date and time information are collected (Not Scored)
   @@results['4']['1']['4'] = {
     :title  => "Ensure events that modify date and time information are collected",
     :scored => false,
@@ -170,13 +174,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep time-change /etc/audit/audit.rules",
+                 'grep2' => "grep time-change /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['4']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => -w /etc/localtime -p wa -k time-change
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => -w /etc/localtime -p wa -k time-change
                     ) then
                    this[:result] = :fail
                  else
@@ -185,7 +191,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.5 Ensure events that modify user/group information are collected
+  # 4.1.5. Ensure events that modify user/group information are collected (Not Scored)
   @@results['4']['1']['5'] = {
     :title  => "Ensure events that modify user/group information are collected",
     :scored => false,
@@ -211,7 +217,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.6 Ensure events that modify the system's network environment are
+  # 4.1.6. Ensure events that modify the system's network environment are (Not Scored)
   @@results['4']['1']['6'] = {
     :title  => "Ensure events that modify the system's network environment are",
     :scored => false,
@@ -222,13 +228,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep system-locale /etc/audit/audit.rules",
+                 'grep2' => "grep system-locale /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['6']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => -w /etc/sysconfig/network -p wa -k system-locale
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => -w /etc/sysconfig/network -p wa -k system-locale
                     ) then
                    this[:result] = :fail
                  else
@@ -237,7 +245,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.7 Ensure events that modify the system's Mandatory Access
+  # 4.1.7. Ensure events that modify the system's Mandatory Access (Not Scored)
   @@results['4']['1']['7'] = {
     :title  => "Ensure events that modify the system's Mandatory Access",
     :scored => false,
@@ -263,7 +271,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.8 Ensure login and logout events are collected
+  # 4.1.8. Ensure login and logout events are collected (Scored)
   @@results['4']['1']['8'] = {
     :title  => "Ensure login and logout events are collected",
     :scored => true,
@@ -289,7 +297,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.9 Ensure session initiation information is collected
+  # 4.1.9. Ensure session initiation information is collected (Scored)
   @@results['4']['1']['9'] = {
     :title  => "Ensure session initiation information is collected",
     :scored => true,
@@ -315,7 +323,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.10 Ensure discretionary access control permission modification
+  # 4.1.10. Ensure discretionary access control permission modification (Not Scored)
   @@results['4']['1']['10'] = {
     :title  => "Ensure discretionary access control permission modification",
     :scored => false,
@@ -326,13 +334,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep perm_mod /etc/audit/audit.rules",
+                 'grep2' => "grep perm_mod /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['10']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => lremovexattr -S fremovexattr -F auid>=1000 -F auid!=4294967295 -k perm_mod
                     ) then
                    this[:result] = :fail
                  else
@@ -341,7 +351,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.11 Ensure unsuccessful unauthorized file access attempts are
+  # 4.1.11. Ensure unsuccessful unauthorized file access attempts are (Not Scored)
   @@results['4']['1']['11'] = {
     :title  => "Ensure unsuccessful unauthorized file access attempts are",
     :scored => false,
@@ -352,13 +362,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep access /etc/audit/audit.rules",
+                 'grep2' => "grep access /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['11']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => -S ftruncate -F
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => -S ftruncate -F
                     ) then
                    this[:result] = :fail
                  else
@@ -367,7 +379,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.12 Ensure use of privileged commands is collected
+  # 4.1.12. Ensure use of privileged commands is collected (Scored)
   @@results['4']['1']['12'] = {
     :title  => "Ensure use of privileged commands is collected",
     :scored => true,
@@ -393,7 +405,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.13 Ensure successful file system mounts are collected
+  # 4.1.13. Ensure successful file system mounts are collected (Scored)
   @@results['4']['1']['13'] = {
     :title  => "Ensure successful file system mounts are collected",
     :scored => true,
@@ -404,13 +416,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep mounts /etc/audit/audit.rules",
+                 'grep2' => "grep mounts /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['13']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => -a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=4294967295 -k mounts
                     ) then
                    this[:result] = :fail
                  else
@@ -419,7 +433,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.14 Ensure file deletion events by users are collected
+  # 4.1.14. Ensure file deletion events by users are collected (Scored)
   @@results['4']['1']['14'] = {
     :title  => "Ensure file deletion events by users are collected",
     :scored => true,
@@ -430,13 +444,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep delete /etc/audit/audit.rules",
+                 'grep2' => "grep delete /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['14']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 F auid!=4294967295 -k delete
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => -a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 F auid!=4294967295 -k delete
                     ) then
                    this[:result] = :fail
                  else
@@ -445,7 +461,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.15 Ensure changes to system administration scope
+  # 4.1.15. Ensure changes to system administration scope (Not Scored)
   @@results['4']['1']['15'] = {
     :title  => "Ensure changes to system administration scope",
     :scored => false,
@@ -471,7 +487,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.16 Ensure system administrator actions
+  # 4.1.16. Ensure system administrator actions (Not Scored)
   @@results['4']['1']['16'] = {
     :title  => "Ensure system administrator actions",
     :scored => false,
@@ -497,7 +513,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.17 Ensure kernel module loading and unloading is collected
+  # 4.1.17. Ensure kernel module loading and unloading is collected (Scored)
   @@results['4']['1']['17'] = {
     :title  => "Ensure kernel module loading and unloading is collected",
     :scored => true,
@@ -508,13 +524,15 @@ class CIS_4_CentOS7
     :result => :nodata,
     :exec   => {
                  'grep' => "grep modules /etc/audit/audit.rules",
+                 'grep2' => "grep modules /etc/audit/audit.rules",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['1']['17']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => -a always,exit arch=b64 -S init_module -S delete_module -k modules
+# grep => On a 64 bit system run the following command and verify the output matches:
+# grep2 => -a always,exit arch=b64 -S init_module -S delete_module -k modules
                     ) then
                    this[:result] = :fail
                  else
@@ -523,7 +541,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.1.18 Ensure the audit configuration is immutable
+  # 4.1.18. Ensure the audit configuration is immutable (Scored)
   @@results['4']['1']['18'] = {
     :title  => "Ensure the audit configuration is immutable",
     :scored => true,
@@ -555,7 +573,7 @@ class CIS_4_CentOS7
   # 4.2.1
   @@results['4']['2']['1'] = Hash.new
 
-  # 4.2.1.1 Ensure rsyslog Service is enabled
+  # 4.2.1.1. Ensure rsyslog Service is enabled (Scored)
   @@results['4']['2']['1']['1'] = {
     :title  => "Ensure rsyslog Service is enabled",
     :scored => true,
@@ -581,7 +599,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.1.2 Ensure logging is configured
+  # 4.2.1.2. Ensure logging is configured (Not Scored)
   @@results['4']['2']['1']['2'] = {
     :title  => "Ensure logging is configured",
     :scored => false,
@@ -606,7 +624,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.1.3 Ensure rsyslog default file permissions configured
+  # 4.2.1.3. Ensure rsyslog default file permissions configured (Scored)
   @@results['4']['2']['1']['3'] = {
     :title  => "Ensure rsyslog default file permissions configured",
     :scored => true,
@@ -631,7 +649,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.1.4 Ensure rsyslog is configured to send logs to a remote log host
+  # 4.2.1.4. Ensure rsyslog is configured to send logs to a remote log host (Not Scored)
   @@results['4']['2']['1']['4'] = {
     :title  => "Ensure rsyslog is configured to send logs to a remote log host",
     :scored => false,
@@ -657,7 +675,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.1.5 Ensure remote rsyslog messages are only accepted on
+  # 4.2.1.5. Ensure remote rsyslog messages are only accepted on (Not Scored)
   @@results['4']['2']['1']['5'] = {
     :title  => "Ensure remote rsyslog messages are only accepted on",
     :scored => false,
@@ -667,14 +685,16 @@ class CIS_4_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep '$InputTCPServerRun' /etc/rsyslog.conf",
+                 'grep' => "grep '$ModLoad imtcp.so' /etc/rsyslog.conf",
+                 'grep2' => "grep '$InputTCPServerRun' /etc/rsyslog.conf",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['4']['2']['1']['5']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => $InputTCPServerRun 514
+# grep => $ModLoad imtcp.so
+# grep2 => $InputTCPServerRun 514
                     ) then
                    this[:result] = :fail
                  else
@@ -686,7 +706,7 @@ class CIS_4_CentOS7
   # 4.2.2
   @@results['4']['2']['2'] = Hash.new
 
-  # 4.2.2.1 Ensure syslog-ng service is enabled
+  # 4.2.2.1. Ensure syslog-ng service is enabled (Scored)
   @@results['4']['2']['2']['1'] = {
     :title  => "Ensure syslog-ng service is enabled",
     :scored => true,
@@ -712,7 +732,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.2.2 Ensure logging is configured
+  # 4.2.2.2. Ensure logging is configured (Not Scored)
   @@results['4']['2']['2']['2'] = {
     :title  => "Ensure logging is configured",
     :scored => false,
@@ -737,7 +757,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.2.3 Ensure syslog-ng default file permissions configured
+  # 4.2.2.3. Ensure syslog-ng default file permissions configured (Scored)
   @@results['4']['2']['2']['3'] = {
     :title  => "Ensure syslog-ng default file permissions configured",
     :scored => true,
@@ -763,7 +783,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.3 Ensure rsyslog or syslog-ng is installed
+  # 4.2.3. Ensure rsyslog or syslog-ng is installed (Scored)
   @@results['4']['2']['3'] = {
     :title  => "Ensure rsyslog or syslog-ng is installed",
     :scored => true,
@@ -773,7 +793,8 @@ class CIS_4_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'rpm' => "rpm -q syslog-ng",
+                 'rpm' => "rpm -q rsyslog",
+                 'rpm2' => "rpm -q syslog-ng",
                },
     :data   => Hash.new,
     :test   => Proc.new {
@@ -788,7 +809,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.2.4 Ensure permissions on all logfiles are configured
+  # 4.2.4. Ensure permissions on all logfiles are configured (Scored)
   @@results['4']['2']['4'] = {
     :title  => "Ensure permissions on all logfiles are configured",
     :scored => true,
@@ -813,7 +834,7 @@ class CIS_4_CentOS7
                },
   }
 
-  # 4.3 Ensure logrotate is configured
+  # 4.3. Ensure logrotate is configured (Not Scored)
   @@results['4']['3'] = {
     :title  => "Ensure logrotate is configured",
     :scored => false,

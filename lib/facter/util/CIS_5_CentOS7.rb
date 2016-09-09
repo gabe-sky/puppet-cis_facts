@@ -27,7 +27,7 @@ class CIS_5_CentOS7
   # 5.1
   @@results['5']['1'] = Hash.new
 
-  # 5.1.2 Ensure permissions on /etc/crontab are configured
+  # 5.1.2. Ensure permissions on /etc/crontab are configured (Scored)
   @@results['5']['1']['2'] = {
     :title  => "Ensure permissions on /etc/crontab are configured",
     :scored => true,
@@ -53,7 +53,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.1.3 Ensure permissions on /etc/cron.hourly are configured
+  # 5.1.3. Ensure permissions on /etc/cron.hourly are configured (Scored)
   @@results['5']['1']['3'] = {
     :title  => "Ensure permissions on /etc/cron.hourly are configured",
     :scored => true,
@@ -79,7 +79,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.1.4 Ensure permissions on /etc/cron.daily are configured
+  # 5.1.4. Ensure permissions on /etc/cron.daily are configured (Scored)
   @@results['5']['1']['4'] = {
     :title  => "Ensure permissions on /etc/cron.daily are configured",
     :scored => true,
@@ -105,7 +105,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.1.5 Ensure permissions on /etc/cron.weekly are configured
+  # 5.1.5. Ensure permissions on /etc/cron.weekly are configured (Scored)
   @@results['5']['1']['5'] = {
     :title  => "Ensure permissions on /etc/cron.weekly are configured",
     :scored => true,
@@ -131,7 +131,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.1.6 Ensure permissions on /etc/cron.monthly are configured
+  # 5.1.6. Ensure permissions on /etc/cron.monthly are configured (Scored)
   @@results['5']['1']['6'] = {
     :title  => "Ensure permissions on /etc/cron.monthly are configured",
     :scored => true,
@@ -157,7 +157,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.1.7 Ensure permissions on /etc/cron.d are configured
+  # 5.1.7. Ensure permissions on /etc/cron.d are configured (Scored)
   @@results['5']['1']['7'] = {
     :title  => "Ensure permissions on /etc/cron.d are configured",
     :scored => true,
@@ -183,7 +183,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.1.8 Ensure at/cron is restricted to authorized users
+  # 5.1.8. Ensure at/cron is restricted to authorized users (Scored)
   @@results['5']['1']['8'] = {
     :title  => "Ensure at/cron is restricted to authorized users",
     :scored => true,
@@ -193,14 +193,20 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'stat' => "stat /etc/at.allow",
+                 'stat3' => "stat /etc/cron.allow",
+                 'stat2' => "stat /etc/at.deny",
+                 'stat4' => "stat /etc/at.allow",
+                 'stat' => "stat /etc/cron.deny",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['1']['8']
                  if (
 # TODO Put failure case here. Expecting:
-# stat => root)
+# stat3 => Access: (0600/-rw-------)
+# stat2 => grant permissions to group or other for both /etc/cron.allow and /etc/at.allow:
+# stat4 => root)
+# stat => stat: cannot stat `/etc/cron.deny': No such file or directory
                     ) then
                    this[:result] = :fail
                  else
@@ -212,7 +218,7 @@ class CIS_5_CentOS7
   # 5.2
   @@results['5']['2'] = Hash.new
 
-  # 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured
+  # 5.2.1. Ensure permissions on /etc/ssh/sshd_config are configured (Not Scored)
   @@results['5']['2']['1'] = {
     :title  => "Ensure permissions on /etc/ssh/sshd_config are configured",
     :scored => false,
@@ -238,7 +244,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.2 Ensure SSH Protocol is set to 2
+  # 5.2.2. Ensure SSH Protocol is set to 2 (Scored)
   @@results['5']['2']['2'] = {
     :title  => "Ensure SSH Protocol is set to 2",
     :scored => true,
@@ -264,7 +270,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.3 Ensure SSH LogLevel is set to INFO
+  # 5.2.3. Ensure SSH LogLevel is set to INFO (Scored)
   @@results['5']['2']['3'] = {
     :title  => "Ensure SSH LogLevel is set to INFO",
     :scored => true,
@@ -290,7 +296,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.4 Ensure SSH X11 forwarding is disabled
+  # 5.2.4. Ensure SSH X11 forwarding is disabled (Scored)
   @@results['5']['2']['4'] = {
     :title  => "Ensure SSH X11 forwarding is disabled",
     :scored => true,
@@ -316,7 +322,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.5 Ensure SSH MaxAuthTries is set to 4 or less
+  # 5.2.5. Ensure SSH MaxAuthTries is set to 4 or less (Scored)
   @@results['5']['2']['5'] = {
     :title  => "Ensure SSH MaxAuthTries is set to 4 or less",
     :scored => true,
@@ -342,7 +348,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.6 Ensure SSH IgnoreRhosts is enabled
+  # 5.2.6. Ensure SSH IgnoreRhosts is enabled (Scored)
   @@results['5']['2']['6'] = {
     :title  => "Ensure SSH IgnoreRhosts is enabled",
     :scored => true,
@@ -368,7 +374,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.7 Ensure SSH HostbasedAuthentication is disabled
+  # 5.2.7. Ensure SSH HostbasedAuthentication is disabled (Scored)
   @@results['5']['2']['7'] = {
     :title  => "Ensure SSH HostbasedAuthentication is disabled",
     :scored => true,
@@ -394,7 +400,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.8 Ensure SSH root login is disabled
+  # 5.2.8. Ensure SSH root login is disabled (Scored)
   @@results['5']['2']['8'] = {
     :title  => "Ensure SSH root login is disabled",
     :scored => true,
@@ -420,7 +426,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.9 Ensure SSH PermitEmptyPasswords is disabled
+  # 5.2.9. Ensure SSH PermitEmptyPasswords is disabled (Scored)
   @@results['5']['2']['9'] = {
     :title  => "Ensure SSH PermitEmptyPasswords is disabled",
     :scored => true,
@@ -446,7 +452,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.10 Ensure SSH PermitUserEnvironment is disabled
+  # 5.2.10. Ensure SSH PermitUserEnvironment is disabled (Scored)
   @@results['5']['2']['10'] = {
     :title  => "Ensure SSH PermitUserEnvironment is disabled",
     :scored => true,
@@ -472,7 +478,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.11 Ensure only approved ciphers are used
+  # 5.2.11. Ensure only approved ciphers are used (Scored)
   @@results['5']['2']['11'] = {
     :title  => "Ensure only approved ciphers are used",
     :scored => true,
@@ -498,7 +504,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.12 Ensure only approved MAC algorithms are used
+  # 5.2.12. Ensure only approved MAC algorithms are used (Scored)
   @@results['5']['2']['12'] = {
     :title  => "Ensure only approved MAC algorithms are used",
     :scored => true,
@@ -524,7 +530,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.13 Ensure SSH Idle Timeout Interval is configured
+  # 5.2.13. Ensure SSH Idle Timeout Interval is configured (Scored)
   @@results['5']['2']['13'] = {
     :title  => "Ensure SSH Idle Timeout Interval is configured",
     :scored => true,
@@ -534,14 +540,16 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep \"^ClientAliveCountMax\" /etc/ssh/sshd_config",
+                 'grep' => "grep \"^ClientAliveInterval\" /etc/ssh/sshd_config",
+                 'grep2' => "grep \"^ClientAliveCountMax\" /etc/ssh/sshd_config",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['2']['13']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => ClientAliveCountMax 0
+# grep => ClientAliveInterval 300
+# grep2 => ClientAliveCountMax 0
                     ) then
                    this[:result] = :fail
                  else
@@ -550,7 +558,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.14 Ensure SSH LoginGraceTime is set to one minute or less
+  # 5.2.14. Ensure SSH LoginGraceTime is set to one minute or less (Scored)
   @@results['5']['2']['14'] = {
     :title  => "Ensure SSH LoginGraceTime is set to one minute or less",
     :scored => true,
@@ -576,7 +584,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.15 Ensure SSH access is limited
+  # 5.2.15. Ensure SSH access is limited (Scored)
   @@results['5']['2']['15'] = {
     :title  => "Ensure SSH access is limited",
     :scored => true,
@@ -586,14 +594,20 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep \"^DenyGroups\" /etc/ssh/sshd_config",
+                 'grep3' => "grep \"^DenyUsers\" /etc/ssh/sshd_config",
+                 'grep' => "grep \"^AllowUsers\" /etc/ssh/sshd_config",
+                 'grep2' => "grep \"^AllowGroups\" /etc/ssh/sshd_config",
+                 'grep4' => "grep \"^DenyGroups\" /etc/ssh/sshd_config",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['2']['15']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => DenyGroups <grouplist>
+# grep3 => DenyUsers <userlist>
+# grep => AllowUsers <userlist>
+# grep2 => AllowGroups <grouplist>
+# grep4 => DenyGroups <grouplist>
                     ) then
                    this[:result] = :fail
                  else
@@ -602,7 +616,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.2.16 Ensure SSH warning banner is configured
+  # 5.2.16. Ensure SSH warning banner is configured (Scored)
   @@results['5']['2']['16'] = {
     :title  => "Ensure SSH warning banner is configured",
     :scored => true,
@@ -631,7 +645,7 @@ class CIS_5_CentOS7
   # 5.3
   @@results['5']['3'] = Hash.new
 
-  # 5.3.1 Ensure password creation requirements are configured
+  # 5.3.1. Ensure password creation requirements are configured (Scored)
   @@results['5']['3']['1'] = {
     :title  => "Ensure password creation requirements are configured",
     :scored => true,
@@ -641,14 +655,26 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep ^ucredit /etc/security/pwquality.conf",
+                 'grep3' => "grep ^minlen /etc/security/pwquality.conf",
+                 'grep' => "grep pam_pwquality.so /etc/pam.d/password-auth",
+                 'grep2' => "grep pam_pwquality.so /etc/pam.d/system-auth",
+                 'grep6' => "grep ^ocredit /etc/security/pwquality.conf",
+                 'grep4' => "grep ^dcredit /etc/security/pwquality.conf",
+                 'grep7' => "grep ^ucredit /etc/security/pwquality.conf",
+                 'grep5' => "grep ^lcredit /etc/security/pwquality.conf",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['3']['1']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => ucredit=-1
+# grep3 => minlen=14
+# grep => password requisite pam_pwquality.so try_first_pass retry=3
+# grep2 => password requisite pam_pwquality.so try_first_pass retry=3
+# grep6 => ocredit=-1
+# grep4 => dcredit=-1
+# grep7 => ucredit=-1
+# grep5 => lcredit=-1
                     ) then
                    this[:result] = :fail
                  else
@@ -657,7 +683,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.3.2 Ensure lockout for failed password attempts is configured
+  # 5.3.2. Ensure lockout for failed password attempts is configured (Scored)
   @@results['5']['3']['2'] = {
     :title  => "Ensure lockout for failed password attempts is configured",
     :scored => true,
@@ -667,13 +693,15 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'egrep' => "egrep '^password\s+sufficient\s+pam_unix.so' /etc/pam.d/system-auth",
+                 'egrep2' => "egrep '^password\s+sufficient\s+pam_unix.so' /etc/pam.d/system-auth",
+                 'egrep' => "egrep '^password\s+sufficient\s+pam_unix.so' /etc/pam.d/password-auth",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['3']['2']
                  if (
 # TODO Put failure case here. Expecting:
+# egrep2 => password sufficient pam_unix.so remember=5
 # egrep => password sufficient pam_unix.so remember=5
                     ) then
                    this[:result] = :fail
@@ -683,7 +711,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.3.4 Ensure password hashing algorithm is SHA-512
+  # 5.3.4. Ensure password hashing algorithm is SHA-512 (Scored)
   @@results['5']['3']['4'] = {
     :title  => "Ensure password hashing algorithm is SHA-512",
     :scored => true,
@@ -693,13 +721,15 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'egrep' => "egrep '^password\s+sufficient\s+pam_unix.so' /etc/pam.d/system-auth",
+                 'egrep2' => "egrep '^password\s+sufficient\s+pam_unix.so' /etc/pam.d/system-auth",
+                 'egrep' => "egrep '^password\s+sufficient\s+pam_unix.so' /etc/pam.d/password-auth",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['3']['4']
                  if (
 # TODO Put failure case here. Expecting:
+# egrep2 => password sufficient pam_unix.so sha512
 # egrep => password sufficient pam_unix.so sha512
                     ) then
                    this[:result] = :fail
@@ -715,7 +745,7 @@ class CIS_5_CentOS7
   # 5.4.1
   @@results['5']['4']['1'] = Hash.new
 
-  # 5.4.1.1 Ensure password expiration is 90 days or less
+  # 5.4.1.1. Ensure password expiration is 90 days or less (Scored)
   @@results['5']['4']['1']['1'] = {
     :title  => "Ensure password expiration is 90 days or less",
     :scored => true,
@@ -745,7 +775,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.4.1.3 Ensure password expiration warning days is 7 or more
+  # 5.4.1.3. Ensure password expiration warning days is 7 or more (Scored)
   @@results['5']['4']['1']['3'] = {
     :title  => "Ensure password expiration warning days is 7 or more",
     :scored => true,
@@ -775,7 +805,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.4.1.4 Ensure inactive password lock is 30 days or less
+  # 5.4.1.4. Ensure inactive password lock is 30 days or less (Scored)
   @@results['5']['4']['1']['4'] = {
     :title  => "Ensure inactive password lock is 30 days or less",
     :scored => true,
@@ -805,7 +835,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.4.3 Ensure default group for the root account is GID 0
+  # 5.4.3. Ensure default group for the root account is GID 0 (Scored)
   @@results['5']['4']['3'] = {
     :title  => "Ensure default group for the root account is GID 0",
     :scored => true,
@@ -831,7 +861,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.4.4 Ensure default user umask is 027 or more restrictive
+  # 5.4.4. Ensure default user umask is 027 or more restrictive (Scored)
   @@results['5']['4']['4'] = {
     :title  => "Ensure default user umask is 027 or more restrictive",
     :scored => true,
@@ -841,7 +871,8 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep \"^umask\" /etc/profile",
+                 'grep' => "grep \"^umask\" /etc/bashrc",
+                 'grep2' => "grep \"^umask\" /etc/profile",
                },
     :data   => Hash.new,
     :test   => Proc.new {
@@ -849,6 +880,7 @@ class CIS_5_CentOS7
                  if (
 # TODO Put failure case here. Expecting:
 # grep => umask 027
+# grep2 => umask 027
                     ) then
                    this[:result] = :fail
                  else
@@ -857,7 +889,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.5 Ensure root login is restricted to system console
+  # 5.5. Ensure root login is restricted to system console (Not Scored)
   @@results['5']['5'] = {
     :title  => "Ensure root login is restricted to system console",
     :scored => false,
@@ -882,7 +914,7 @@ class CIS_5_CentOS7
                },
   }
 
-  # 5.6 Ensure access to the su command is restricted
+  # 5.6. Ensure access to the su command is restricted (Scored)
   @@results['5']['6'] = {
     :title  => "Ensure access to the su command is restricted",
     :scored => true,
@@ -892,14 +924,16 @@ class CIS_5_CentOS7
                },
     :result => :nodata,
     :exec   => {
-                 'grep' => "grep wheel /etc/group",
+                 'grep' => "grep pam_wheel.so /etc/pam.d/su",
+                 'grep2' => "grep wheel /etc/group",
                },
     :data   => Hash.new,
     :test   => Proc.new {
                  this = @@results['5']['6']
                  if (
 # TODO Put failure case here. Expecting:
-# grep => wheel:x:10:root,<user list>
+# grep => Run the following command and verify users in wheel group match site policy:
+# grep2 => wheel:x:10:root,<user list>
                     ) then
                    this[:result] = :fail
                  else
