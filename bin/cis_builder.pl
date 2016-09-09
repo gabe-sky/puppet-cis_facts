@@ -173,15 +173,19 @@ sub parse_pdf #()#
       {
         if ($line =~ /^# (\S+)(.+)/)
         {
-          $unit{&EXEC}{$1} = "$1$2";
-          $variable = $1;
+          my ($cmd, $params) = ($1, $2);
+          my $key   = $cmd;
+          my $count = 1;
+          while (exists $unit{&EXEC}{$key}) {
+            $count++;
+            $key = $cmd . $count;
+          }
+          $unit{&EXEC}{$key} = $cmd . $params;
+          $variable = $key;
         }
         else
         {
-          my $expected_value = ($line =~ /<No output>/)
-                             ? ''
-                             : $line;
-          $unit{&EXPECT}{$variable} = $expected_value;
+          $unit{&EXPECT}{$variable} = $line;
         }
       }
     }
@@ -313,9 +317,10 @@ sub traverse_tree #(*\%\@)#
   if (exists $tree->{&TITLE})
   {
     # Leaf Node
-    printf $fh "  # %s %s\n",
+    printf $fh "  # %s %s (%s)\n",
                join('.', @parents),
-               $tree->{&TITLE};
+               $tree->{&TITLE},
+               ($tree->{&SCORED} == 'true') ? 'Scored' : 'Not Scored';
     printf $fh "  \@\@results['%s'] = {\n",
                join("']['", @parents);
     my $title =  $tree->{&TITLE};
