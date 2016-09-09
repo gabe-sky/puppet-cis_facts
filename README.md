@@ -58,14 +58,14 @@ It's up to you to decide what to do with the data.  It's my assumption that you'
 If you just want to see it run, grab any old CentOS 7 system that has a Puppet agent on it and drop the contents of lib/facter into your agent's factpath.
 
 * Disable your agent, so pluginsync won't remove this file randomly.
-** `puppet agent --disable 'Messing with facter'`
+  * `puppet agent --disable 'Messing with facter'`
 * Determine where the agent is looking for facts.
-** `puppet agent --configprint factpath`
+  * `puppet agent --configprint factpath`
 * Copy all the files in this repository's lib/facter directory into that machine's factpath.
 * Run facter and see what happens.
-** `facter -p cis_centos7`
+  * `facter -p cis_centos7`
 * Re-enable the agent when you're done.  (Its next run will delete this fact!)
-** `puppet agent --enable`
+  * `puppet agent --enable`
 
 ## Actually Deploy It from the Master
 
