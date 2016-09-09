@@ -1,52 +1,69 @@
 # Overview
 
-This repository contains a prototype or proof-of-concept.  Its aim is to provide Facter facts that reflect a node's compliance with CIS benchmarks.  Currently this is only implemented for nodes running
+This is a custom fact, for Facter, which is part of Puppet.  This is a simple proof-of-concept, to show how you might approach the task of using Puppet to ensure that systems are compliant with various CIS benchmarks.  It's meant to get you started about how you'd do it at your own site.
 
-  * CIS 2.0.1 -- CentOS Linux 7
+Currently, it only checks the guidelines in CIS 2.0.1 for CentOS Linux 7.  Facter won't even try to run it on anything else.  (Which means it's safe to let pluginsync hand it to all your nodes, regardless of OS.)
 
-You can download the CIS benchmarks from their site.
+If you'd like a copy of the CIS benchmarks, they're available at the CIS website:
 
   https://benchmarks.cisecurity.org/downloads/latest/
 
-# Philosophy
+# This Is a Conversation Starter, Not a "Project"
 
-Perfect is the enemy of a functional bunch of pokes at the problem.  Rather than aim for a "product," let's just throw this out and see what happens.
+Invariably, when I describe or demo this thing, someone says "oh yeah and you could also ..." and they start talking about all sorts of extra features.  Yes!  But that's not the point of this particular exercise.
 
-Make it easy for the less-technical folks to read.  All facts in this project use the actual commands that the CIS guidelines list for each item.  We could implement the facts using "real" classes like File.  To an auditor, however, using the actual commands that they're looking for is way easier than trying to explain to them what cleverness you're doing in Ruby code.
-
-Don't dither.  When you mention this idea to someone, they invariably start brainstorming.  Theoretical discussion is fun!  But this does not result in code or pull requests.
-
-Make it super easy to discover and report nodes' status.  Using facts means that a person can use an `mco` command with a cleverly-crafted `--select` flag to quickly get a report of machines that are failing some certain test.  Or you could do a PuppetDB query.  Or look in the Enterprise Console.  Using facts makes these things easy.
+The point of this code is to get people started thinking about one very simple approach to auditing security.  Your own implementation is your own business.  This is just a conversation starter.
 
 
 # Implementation
 
-## Ruby-based facts
+Most individual guidelines are checked by using Facter::Core::Execution.exec() to run the exact command listed in the "audit" section of the benchmark document.  Based on the result, they populate a hash that reflects compliance with each particular benchmark.  The result is a humongous (but easily machine parsable) structured fact that details everything about the node's compliance status.
 
-Most individual guidelines just use Facter::Core::Execution.exec() to run the command listed in the benchmark document.  Based on the result of that command, if the guideline passes nothing is done, and if the guideline is failed, its identity is added to an array of failing guidelines.
+Once this fact has been pluginsync'd down to a node, you can see the whole enormous structured fact from the command line of that node:
 
-For the RedHat benchmark, the arrays of failing guidelines are broken up into multiple facts that span an X.Y section of the guideline.  For other systems, like AIX, the arrays should span an X.Y.Z section of their respective guideline.  The goal is to have a dozen or so checks' status collapsed into each sub-section grouping.
+```shellsession
+facter -p cis_centos7
+```
 
-## Facts.d-based facts
+As simple example, though, here's what you get if you index deeper into the fact to look at just one benchmark:
 
-Some audit commands are just too heavy to execute on every run (think of ones that do a find down the whole filesystem) and those are implemented by cron jobs that write their results to facts.d.
+```shellsession
+facter -p cis_centos7.1.2
+```
+
+```
+{
+  3 => {
+    title => "Ensure gpgcheck is globally activated",
+    scored => true,
+    level => {
+      server => "1",
+      workstation => "1"
+    },
+    result => "pass"
+  }
+}
+```
+
+We invoked facter and told it to show the 1.2 section.  Within 1.2, there is only one fact implemented, section 3.  The title key reflects what the CIS benchmark calls this benchmark in text.  There's a key indicating whether this benchmark is scored or not.  And two keys indicate what "level" this benchmark is for servers or workstations.  The "result" field, naturally, tells you if the system you ran facter on is in compliance.
+
+It's up to you to decide what to do with the data.  It's my assumption that you're going to craft something like and MCollective inventory script, or make some clever PuppetDB queries, or maybe create node groups in the Puppet Enterprise Console that at-a-glance show you machines that match certain criteria.  The fact gives you everything, and it's up to you to filter out what you consider to be noise.
+
 
 # Getting started
 
-To distribute these facts to nodes, simply install the module on your Puppet master.  On your next run, all of the facts will get synced down to all agents and they'll start to show up, even if you do not classify nodes with a cis class.  You only need to include classes to get the cron facts.d-based facts.
+## Test on One System
 
-## Mcollective Ad-Hoc Queries
+If you just want to see it run, grab any old CentOS 7 system that has a Puppet agent on it and drop the contents of lib/facter into your agent's factpath.
 
-Let's add some example mco queries that will let someone easily get basic info on their environment.
+* Disable your agent, so pluginsync won't remove this file randomly.
+** `puppet agent --disable`
+* Determine where the agent is looking for facts.
+** `puppet agent --configprint factpath`
+* Copy all the files in this repository's lib/facter directory into a directory in that machine's factpath.
+* Run facter and see what happens.
+** `facter -p cis_centos7`
 
-## PuppetDB Ad-Hoc Queries
+## Actually Deploy It from the Master
 
-Let's add some example curls to get folks started.
-
-
-# Future discussion
-
-* How do you exclude a fact from causing failure of a section of the guidelines.  For instance, what if the customer doesn't care if /tmp is a separate partition?
-  * Let the admin (or Puppet code from e.g. a profile class) drop a fact into facts.d such as "excludechecks=3.1,3.2,3.6" perhaps?
-  * Some clever query to an external database?
-* Before getting too far down the road, these should be implemented as structured facts.
+You can install the contents of this repository as a Puppet module.  When agents connect to the master, during their pluginsync phase, they'll automatically download the new fact code.  When facter kicks off, CentOS 7 machines will use the fact.  After the run, the agent will report back to the master, and its facts will be likely stashed in PuppetDB or onto disk on the master.
