@@ -1,7 +1,7 @@
 
 
-Facter.add(:cis_centos7) do
-  confine :operatingsystem => 'CentOS'
+Facter.add(:cis_rhel7) do
+  confine :osfamily => 'RedHat'
   confine :operatingsystemmajrelease => '7'
 
   # We'll build up this hash with all of the results, for a structured fact
