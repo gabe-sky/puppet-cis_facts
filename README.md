@@ -2,19 +2,11 @@
 
 This is a custom fact, for Facter, which is part of Puppet.  This is a simple proof-of-concept, to show how you might approach the task of using Puppet to ensure that systems are compliant with various CIS benchmarks.  It's meant to get you started thinking about how you'd do it at your own site.
 
-Currently, it only checks the guidelines in CIS 2.0.1 for CentOS Linux 7.  Facter won't even try to run it on anything else.  (Which means it's safe to let pluginsync hand it to all your nodes, regardless of OS.)
+It currently checks just two subsections of the CIS benchmarks, as a demonstration.  On a CentOS 7 machine, it will report on Section 1 of the CIS 2.0.1 benchmarks.  On a CentOS 6 machine, it will report on section 3.2.  On other systems, it will not run at all.
 
 If you'd like a copy of the CIS benchmarks, they're available at the CIS website:
 
   https://benchmarks.cisecurity.org/downloads/latest/
-
-
-# This Is a Conversation Starter, Not a "Project"
-
-Invariably, when I describe or demo this thing, someone says "oh yeah and you could also ..." and they start talking about all sorts of extra features.  Yes!  But that's not the point of this particular exercise.
-
-The point of this code is to get people started thinking about one very simple approach to auditing security.  Your own implementation is your own business.  This is just a conversation starter with some code.
-
 
 # Implementation
 
@@ -23,7 +15,10 @@ Most individual guidelines are checked by using Facter::Core::Execution.exec() t
 Once this fact has been pluginsync'd down to a node, you can see the whole enormous structured fact from the command line of that node:
 
 ```shellsession
+# On CentOS 7
 facter -p cis_centos7
+# On a EL 6
+facter -p cis_rhel6
 ```
 
 And for a simple example, here's what you get if you index deeper into the whole fact to look at just one benchmark:
@@ -53,9 +48,18 @@ It's up to you to decide what to do with the data.  It's my assumption that you'
 
 # Getting started
 
-## Test on One System
+## Actually Deploy It from the Master
 
-If you just want to see it run, grab any old CentOS 7 system that has a Puppet agent on it and drop the contents of lib/facter into your agent's factpath.
+This repository is a properly structured Puppet module, so you can just drop it in your modules directory.  If you're using r10k or Code Manager, add a line like this to your Puppetfile:
+
+  mod 'gabe_sky/cis_facts',
+    :git => 'https://github.com/gabe-sky/puppet-cis_facts.git'
+
+When agents run, they'll download the custom fact automatically and it will become available on the command line, in PuppetDB, and in the Enterprise Console, just like any other fact.
+
+## Test Without Installing
+
+If you just want to see it run, grab any old CentOS 6/7 system that has a Puppet agent on it and drop the contents of lib/facter into your agent's factpath.
 
 * Disable your agent, so pluginsync won't remove this file randomly.
   * `puppet agent --disable 'Messing with facter'`
@@ -67,6 +71,8 @@ If you just want to see it run, grab any old CentOS 7 system that has a Puppet a
 * Re-enable the agent when you're done.  (Its next run will delete this fact!)
   * `puppet agent --enable`
 
-## Actually Deploy It from the Master
+# This Is a Conversation Starter, Not a "Project"
 
-You can install the contents of this repository as a Puppet module.  When agents connect to the master, during their pluginsync phase, they'll automatically download the new fact code.  When facter kicks off, CentOS 7 machines will use the fact.  After the run, the agent will report back to the master, and its facts will probably stashed in PuppetDB or sometimes just onto disk on the master.
+Invariably, when I describe or demo this thing, someone says "oh yeah and you could also ..." and they start talking about all sorts of extra features.  Yes!  But that's not the point of this particular exercise.
+
+The point of this code is to get people started thinking about one very simple approach to auditing security.  Your own implementation is your own business.  This is just a conversation starter with some code.
